@@ -25,9 +25,9 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mRefreshLayout = (CircleRefreshLayout) findViewById(R.id.refresh_layout);
-        mList = (ListView) findViewById(R.id.list);
-        mStop = (Button) findViewById(R.id.stop_refresh);
+        mRefreshLayout = findViewById(R.id.refresh_layout);
+        mList = findViewById(R.id.list);
+        mStop = findViewById(R.id.stop_refresh);
 
         String[] strs = {
                 "The",
