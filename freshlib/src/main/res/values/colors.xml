@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="bong_color">#FFF68912</color>
+    <color name="no_bong_color">#FFB744</color>
+    <color name="sleep">#9540F6</color>
+    <color name="quiet">#404040</color>
+    <color name="block_charge">#1C6CCF</color>
+    <color name="block_other">#A5A5A5</color>
+    <color name="bong_item_info_color">#DB923A</color>
+    <color name="white_66">#A8FFFFFF</color>
+    <color name="child_bg">#262626</color>
+    <color name="bong_black_bg">#F2303030</color>
+
+
+    <color name="black">#202020</color>
+    <color name="bong_day_item_bg">#181818</color>
+
+</resources>
