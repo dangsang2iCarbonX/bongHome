@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical">
+
+
+    <com.tuesda.walker.circlerefresh.CycProgressBar
+        android:id="@+id/cycbar"
+        android:layout_width="100dp"
+        android:layout_height="00dp"
+        android:background="#999999" />
+
+    <Button
+        android:id="@+id/add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="+" />
+
+    <Button
+        android:id="@+id/less"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="-" />
+
+    <Button
+        android:id="@+id/all"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ALL" />
+
+    <Button
+        android:id="@+id/simple"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Simple" />
+
+</LinearLayout>

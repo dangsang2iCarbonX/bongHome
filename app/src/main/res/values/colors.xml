@@ -1,6 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="bong_color">#FFF68912</color>
+    <color name="no_bong_color">#FFB744</color>
+    <color name="sleep">#9540F6</color>
+    <color name="quiet">#404040</color>
+    <color name="block_charge">#1C6CCF</color>
+    <color name="block_other">#A5A5A5</color>
+    <color name="bong_item_info_color">#DB923A</color>
+    <color name="white_66">#A8FFFFFF</color>
+    <color name="child_bg">#262626</color>
+    <color name="bong_black_bg">#F2303030</color>
+
+    <!-- bong pro-->
+    <color name="unit_text_color">#4C4C4C</color>
+    <color name="deep_sleep_color">#450291</color>
+    <color name="light_sleep_color">#711fce</color>
+    <color name="wake_color">#ebb127</color>
+    <color name="bong_pro_bg">#f5f5f5</color>
+    <!--share-->
+    <color name="share_bg">#1d1d1d</color>
+    <color name="status_bar_color">#FF303030</color>
+    <!--<color name="bg_item_swiping_state">#ffddddff</color>-->
+    <!--<color name="bg_item_swiping_active_state">#ff9999ff</color>-->
+    <color name="step_top">#0D57A3</color>
+    <color name="step_bottom">#3898FC</color>
+    <color name="energy_top">#ED4C0D</color>
+    <color name="energy_bottom">#FFCC00</color>
+    <color name="heart_rate_top">#E20100</color>
+    <color name="heart_rate_bottom">#EA8F25</color>
 </resources>
