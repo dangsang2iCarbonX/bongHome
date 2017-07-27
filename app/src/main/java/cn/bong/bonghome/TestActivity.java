@@ -5,8 +5,9 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
 
-import com.tuesda.walker.circlerefresh.Content;
-import com.tuesda.walker.circlerefresh.CycProgressBar;
+import cn.hackill.bong.Content;
+import cn.hackill.bong.CycProgressBar;
+
 
 /**
  * @author hackill

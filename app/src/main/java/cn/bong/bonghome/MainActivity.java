@@ -9,7 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 
-import com.tuesda.walker.circlerefresh.CircleRefreshLayout;
+import cn.hackill.bong.CircleRefreshLayout;
 
 
 public class MainActivity extends Activity {

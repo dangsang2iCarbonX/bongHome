@@ -3,7 +3,7 @@
     android:layout_height="match_parent">
 
 
-    <com.tuesda.walker.circlerefresh.CircleRefreshLayout
+    <cn.hackill.bong.CircleRefreshLayout
         android:id="@+id/refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -13,7 +13,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
-    </com.tuesda.walker.circlerefresh.CircleRefreshLayout>
+    </cn.hackill.bong.CircleRefreshLayout>
 
     <Button
         android:id="@+id/stop_refresh"

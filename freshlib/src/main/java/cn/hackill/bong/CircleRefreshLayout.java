@@ -1,4 +1,4 @@
-package com.tuesda.walker.circlerefresh;
+package cn.hackill.bong;
 
 import android.animation.ValueAnimator;
 import android.content.Context;
@@ -16,6 +16,8 @@ import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.AbsListView;
 import android.widget.FrameLayout;
+
+import com.tuesda.walker.circlerefresh.R;
 
 
 public class CircleRefreshLayout extends FrameLayout {

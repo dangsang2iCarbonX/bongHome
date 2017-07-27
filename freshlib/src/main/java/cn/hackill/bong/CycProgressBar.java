@@ -1,4 +1,4 @@
-package com.tuesda.walker.circlerefresh;
+package cn.hackill.bong;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -11,6 +11,8 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
+
+import com.tuesda.walker.circlerefresh.R;
 
 import java.util.Random;
 
@@ -103,19 +105,20 @@ public class CycProgressBar extends View {
         mProgressPaint.setStrokeWidth(mCircleStrokeWidth);
 
         mThumbTop.set(
-                mSize * 0.08f,
+                mSize * 0.1f,
                 mSize * 0.15f,
-                mSize * 0.92f,
-                mSize * 0.85f);
+                mSize * 0.90f,
+                mSize * 0.75f);
+
         mThumbBottom.set(
                 mSize * 0.25f,
                 mSize * 0.55f,
                 mSize * 0.75f,
-                mSize);
+                mSize * 0.9f);
 
         mRectFOne.set(
                 mSize * 0.3f,
-                mSize * 0.06f,
+                mSize * 0.08f,
                 mSize * 0.7f,
                 mSize * 0.22f);
 
@@ -255,8 +258,8 @@ public class CycProgressBar extends View {
 
         canvas.drawText(text, startX, baseLine, paint);
 
-//        mTestPaint.setAlpha(50 + new Random().nextInt(150));
-//        canvas.drawRect(targetRectF, mTestPaint);
+        mTestPaint.setAlpha(50 + new Random().nextInt(150));
+        canvas.drawRect(targetRectF, mTestPaint);
     }
 
     private void drawTextRenderer(Canvas canvas, String text, float textSize, String unit, float unitSize, RectF targetRectF, Paint paint) {
@@ -326,8 +329,8 @@ public class CycProgressBar extends View {
             canvas.drawBitmap(bitmap, targetRectF.centerX() - bitmap.getWidth() / 2, targetRectF.centerY() - bitmap.getHeight() / 2, new Paint());
         }
 
-//        mTestPaint.setAlpha(50 + new Random().nextInt(150));
-//        canvas.drawRect(targetRectF, mTestPaint);
+        mTestPaint.setAlpha(50 + new Random().nextInt(150));
+        canvas.drawRect(targetRectF, mTestPaint);
     }
 
     private Paint measurePaint(String text, float width, Paint paint, float defaultSize) {
