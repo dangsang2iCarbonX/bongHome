@@ -258,8 +258,8 @@ public class CycProgressBar extends View {
 
         canvas.drawText(text, startX, baseLine, paint);
 
-        mTestPaint.setAlpha(50 + new Random().nextInt(150));
-        canvas.drawRect(targetRectF, mTestPaint);
+//        mTestPaint.setAlpha(50 + new Random().nextInt(150));
+//        canvas.drawRect(targetRectF, mTestPaint);
     }
 
     private void drawTextRenderer(Canvas canvas, String text, float textSize, String unit, float unitSize, RectF targetRectF, Paint paint) {
@@ -329,8 +329,8 @@ public class CycProgressBar extends View {
             canvas.drawBitmap(bitmap, targetRectF.centerX() - bitmap.getWidth() / 2, targetRectF.centerY() - bitmap.getHeight() / 2, new Paint());
         }
 
-        mTestPaint.setAlpha(50 + new Random().nextInt(150));
-        canvas.drawRect(targetRectF, mTestPaint);
+//        mTestPaint.setAlpha(50 + new Random().nextInt(150));
+//        canvas.drawRect(targetRectF, mTestPaint);
     }
 
     private Paint measurePaint(String text, float width, Paint paint, float defaultSize) {

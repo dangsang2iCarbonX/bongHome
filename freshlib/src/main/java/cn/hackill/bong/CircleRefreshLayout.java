@@ -16,11 +16,12 @@ import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.AbsListView;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 
 import com.tuesda.walker.circlerefresh.R;
 
 
-public class CircleRefreshLayout extends FrameLayout {
+public class CircleRefreshLayout extends LinearLayout {
 
     private static String TAG = "pullToRefresh";
 
@@ -35,13 +36,14 @@ public class CircleRefreshLayout extends FrameLayout {
     private float mPullHeight;
     private float mHeaderHeight;
     private View mChildView;
-    private AnimationView mHeaderAnimationView;
+    private SummaryLayout mHeaderAnimationView;
 
     private boolean mIsRefreshing;
 
     private float mTouchStartY;
 
     private ValueAnimator mUpTopAnimator;
+
 
     private DecelerateInterpolator decelerateInterpolator = new DecelerateInterpolator(10);
 
@@ -60,9 +62,9 @@ public class CircleRefreshLayout extends FrameLayout {
 
     private void init(Context context, AttributeSet attrs, int defStyleAttr) {
 
-        if (getChildCount() > 1) {
-            throw new RuntimeException("you can only attach one child");
-        }
+
+        setOrientation(VERTICAL);
+
         setAttrs(attrs);
         mPullHeight = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 150, context.getResources().getDisplayMetrics());
         mHeaderHeight = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 100, context.getResources().getDisplayMetrics());
@@ -70,6 +72,9 @@ public class CircleRefreshLayout extends FrameLayout {
         this.post(new Runnable() {
             @Override
             public void run() {
+                if (getChildCount() > 1) {
+                    throw new RuntimeException("you can only attach one child");
+                }
                 mChildView = getChildAt(0);
                 addHeaderView();
             }
@@ -88,12 +93,16 @@ public class CircleRefreshLayout extends FrameLayout {
     }
 
     private void addHeaderView() {
-        mHeaderAnimationView = new AnimationView(getContext());
-        LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0);
-        params.gravity = Gravity.TOP;
+        mHeaderAnimationView = new SummaryLayout(getContext());
+        LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 200);
+//        params.gravity = Gravity.TOP;
         mHeaderAnimationView.setLayoutParams(params);
 
-        addViewInternal(mHeaderAnimationView);
+//        addViewInternal(mHeaderAnimationView);
+        addView(mHeaderAnimationView);
+
+//        mChildView.setTranslationY(250);
+
         mHeaderAnimationView.setAniBackColor(mHeaderBackColor);
         mHeaderAnimationView.setAniForeColor(mHeaderForeColor);
         mHeaderAnimationView.setRadius(mHeaderCircleSmaller);
@@ -110,21 +119,24 @@ public class CircleRefreshLayout extends FrameLayout {
         mUpTopAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
+
+                Log.i(TAG, "onAnimationUpdate: ，。。。。");
+                
                 float val = (float) animation.getAnimatedValue();
                 val = decelerateInterpolator.getInterpolation(val / mHeaderHeight) * val;
                 if (mChildView != null) {
                     mChildView.setTranslationY(val);
                 }
-                mHeaderAnimationView.getLayoutParams().height = (int) val;
+                mHeaderAnimationView.getLayoutParams().height = (int) val ;
                 mHeaderAnimationView.requestLayout();
             }
         });
         mUpTopAnimator.setDuration(BACK_TOP_DUR);
 
-        mHeaderAnimationView.setOnViewAniDone(new AnimationView.OnViewAniDone() {
+        mHeaderAnimationView.setOnViewAniDone(new SummaryLayout.OnViewAniDone() {
             @Override
             public void viewAniDone() {
-//                Log.i(TAG, "should invoke");
+                Log.i(TAG, "viewAniDone: 。。。。");
                 mUpTopAnimator.start();
             }
         });
@@ -145,26 +157,28 @@ public class CircleRefreshLayout extends FrameLayout {
         valueAnimator.start();
     }
 
-    private void addViewInternal(@NonNull View child) {
-        super.addView(child);
-    }
+//    private void addViewInternal(@NonNull View child) {
+//        super.addView(child);
+//    }
 
-    @Override
-    public void addView(View child) {
-        if (getChildCount() >= 1) {
-            throw new RuntimeException("you can only attach one child");
-        }
-
-        mChildView = child;
-        super.addView(child);
-        setUpChildAnimation();
-    }
+// 手动添加view
+//    @Override
+//    public void addView(View child) {
+//        Log.d(TAG, "addView() called with: child = [" + child + "]");
+//
+//        if (getChildCount() >= 1) {
+//            throw new RuntimeException("you can only attach one child");
+//        }
+//
+//        mChildView = child;
+//        super.addView(child);
+//        setUpChildAnimation();
+//    }
 
     private boolean canChildScrollUp() {
         if (mChildView == null) {
             return false;
         }
-
 
         return ViewCompat.canScrollVertically(mChildView, -1);
     }
@@ -206,7 +220,7 @@ public class CircleRefreshLayout extends FrameLayout {
 
                     float offsetY = decelerateInterpolator.getInterpolation(deltaY / 2 / mPullHeight) * deltaY / 2;
                     mChildView.setTranslationY(offsetY);
-                    mHeaderAnimationView.getLayoutParams().height = (int) offsetY;
+                    mHeaderAnimationView.getLayoutParams().height = (int) offsetY + 0;
                     mHeaderAnimationView.requestLayout();
                     sendCancelEvent();
                     return true;

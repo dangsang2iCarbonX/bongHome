@@ -1,6 +1,7 @@
 package cn.bong.bonghome;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
@@ -43,6 +44,8 @@ public class TestActivity extends Activity {
 
                 float progress = cycProgressBar.getProgress();
                 cycProgressBar.setProgress(progress - 1);
+
+//                startActivity(new Intent(TestActivity.this, LayoutActivity.class));
             }
         });
 

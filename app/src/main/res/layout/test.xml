@@ -8,8 +8,8 @@
 
     <cn.hackill.bong.CycProgressBar
         android:id="@+id/cycbar"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:background="#711fce" />
 
     <Button

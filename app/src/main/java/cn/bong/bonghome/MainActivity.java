@@ -3,20 +3,17 @@ package cn.bong.bonghome;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ListView;
-
-import cn.hackill.bong.CircleRefreshLayout;
 
 
 public class MainActivity extends Activity {
 
     private static final String TAG = "MainActivity";
 
-    private CircleRefreshLayout mRefreshLayout;
     private ListView mList;
     private Button mStop;
 
@@ -25,7 +22,9 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mRefreshLayout = findViewById(R.id.refresh_layout);
+
+
+
         mList = findViewById(R.id.list);
         mStop = findViewById(R.id.stop_refresh);
 
@@ -85,32 +84,9 @@ public class MainActivity extends Activity {
         mStop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mRefreshLayout.finishRefreshing();
+
             }
         });
-
-        mRefreshLayout.setOnRefreshListener(
-                new CircleRefreshLayout.OnCircleRefreshListener() {
-                    @Override
-                    public void refreshing() {
-                        // do something when refresh starts
-                        Log.i(TAG, "refreshing: ....");
-
-//                        mRefreshLayout.postDelayed(new Runnable() {
-//                            @Override
-//                            public void run() {
-//                                mRefreshLayout.finishRefreshing();
-//                            }
-//                        }, 3000);
-                    }
-
-                    @Override
-                    public void completeRefresh() {
-                        // do something when refresh complete
-                        Log.i(TAG, "completeRefresh: ");
-                    }
-                });
-
 
         findViewById(R.id.go).setOnClickListener(new View.OnClickListener() {
             @Override
