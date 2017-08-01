@@ -1,6 +1,9 @@
 package cn.hackill.bong;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.support.annotation.AttrRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -13,6 +16,7 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
 import com.tuesda.walker.circlerefresh.R;
+
 
 /**
  * @author hackill
@@ -37,6 +41,7 @@ public class TopLayout extends FrameLayout {
     }
 
     View cycTop;
+    private Bitmap bitmap;
 
     @Override
     protected void onFinishInflate() {
@@ -44,9 +49,10 @@ public class TopLayout extends FrameLayout {
         Log.i(TAG, "onFinishInflate: .....");
         cycTop = LayoutInflater.from(getContext()).inflate(R.layout.cyc_top, null);
         addView(cycTop);
-//        cycTop = getChildAt(0);
         initView();
         requestLayout();
+        //
+        bitmap = BitmapUtil.drawableToBitmap(getContext().getResources().getDrawable(R.drawable.home_bg_step));
     }
 
     AnimationView animationView;
@@ -58,6 +64,8 @@ public class TopLayout extends FrameLayout {
         animationView.setLayoutParams(params);
         addView(animationView);
         Log.i(TAG, "initView: .....");
+        setWillNotDraw(false);
+        postInvalidate();
     }
 
 
@@ -65,20 +73,14 @@ public class TopLayout extends FrameLayout {
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
 
         Log.d(TAG, "onLayout() called with: changed = [" + changed + "], left = [" + left + "], top = [" + top + "], right = [" + right + "], bottom = [" + bottom + "]");
-
         if (changed) {
-
             int viewOneHeight = cycTop.getMeasuredHeight();
             int viewTwoHeight = animationView.getMeasuredHeight();
 
             Log.i(TAG, "onLayout: oneH = " + viewOneHeight + ", twoH = " + viewTwoHeight);
-
-            cycTop.layout(left, top, right, viewOneHeight);
-            animationView.layout(left, viewOneHeight, right, bottom);
-//            requestLayout();
-//            super.requestLayout();
+            cycTop.layout(left, 0, right, viewOneHeight);
+            animationView.layout(left, viewOneHeight - cycTop.getPaddingBottom(), right, Math.max(viewOneHeight, bottom));
         }
-        super.onLayout(changed, left, top, right, bottom);
     }
 
     @Override
@@ -91,5 +93,13 @@ public class TopLayout extends FrameLayout {
             // 为ScrollerLayout中的每一个子控件测量大小
             measureChild(childView, widthMeasureSpec, heightMeasureSpec);
         }
+    }
+
+    @Override
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+        Log.i(TAG, "onDraw: ......");
+
+        canvas.drawBitmap(bitmap, 0, 0, new Paint());
     }
 }
