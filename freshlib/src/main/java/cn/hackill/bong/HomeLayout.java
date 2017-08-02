@@ -277,9 +277,9 @@ public class HomeLayout extends FrameLayout {
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
         try {
-
             boolean intercept = shouldIntercept && dragHelper.shouldInterceptTouchEvent(ev);
             Log.i(TAG, "onInterceptTouchEvent:   intercept = " + intercept + ", shouldIntercept = " + shouldIntercept + ", needInter = " + needInter);
+            needInter &= shouldIntercept;
             return intercept || needInter;
         } catch (NullPointerException e) {
             e.printStackTrace();
