@@ -2,12 +2,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <cn.hackill.bong.DragTopLayout
+    <cn.hackill.bong.HomeLayout
         android:id="@+id/refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <cn.hackill.bong.TopLayout
+            android:id="@+id/top"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
@@ -17,7 +18,7 @@
             android:layout_height="match_parent"
             android:background="#FFFFFF" />
 
-    </cn.hackill.bong.DragTopLayout>
+    </cn.hackill.bong.HomeLayout>
 
 
     <Button

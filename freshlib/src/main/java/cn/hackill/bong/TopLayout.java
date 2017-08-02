@@ -3,13 +3,13 @@ package cn.hackill.bong;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Paint;
 import android.support.annotation.AttrRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -55,14 +55,17 @@ public class TopLayout extends FrameLayout {
         bitmap = BitmapUtil.drawableToBitmap(getContext().getResources().getDrawable(R.drawable.home_bg_step));
     }
 
-    AnimationView animationView;
+    BezierLoadingView mLoadingView;
 
 
     private void initView() {
-        animationView = new AnimationView(getContext());
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 200);
-        animationView.setLayoutParams(params);
-        addView(animationView);
+        mLoadingView = new BezierLoadingView(getContext());
+
+        int height = (int) DisplayUtil.dp2Px(getContext(), 50);
+
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, height);
+        mLoadingView.setLayoutParams(params);
+        addView(mLoadingView);
         Log.i(TAG, "initView: .....");
         setWillNotDraw(false);
         postInvalidate();
@@ -72,14 +75,14 @@ public class TopLayout extends FrameLayout {
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
 
-        Log.d(TAG, "onLayout() called with: changed = [" + changed + "], left = [" + left + "], top = [" + top + "], right = [" + right + "], bottom = [" + bottom + "]");
+//        Log.d(TAG, "onLayout() called with: changed = [" + changed + "], left = [" + left + "], top = [" + top + "], right = [" + right + "], bottom = [" + bottom + "]");
         if (changed) {
             int viewOneHeight = cycTop.getMeasuredHeight();
-            int viewTwoHeight = animationView.getMeasuredHeight();
+            int viewTwoHeight = mLoadingView.getMeasuredHeight();
 
-            Log.i(TAG, "onLayout: oneH = " + viewOneHeight + ", twoH = " + viewTwoHeight);
+//            Log.i(TAG, "onLayout: oneH = " + viewOneHeight + ", twoH = " + viewTwoHeight);
             cycTop.layout(left, 0, right, viewOneHeight);
-            animationView.layout(left, viewOneHeight - cycTop.getPaddingBottom(), right, Math.max(viewOneHeight, bottom));
+            mLoadingView.layout(left, viewOneHeight - cycTop.getPaddingBottom(), right, Math.max(viewOneHeight, bottom));
         }
     }
 
@@ -99,7 +102,10 @@ public class TopLayout extends FrameLayout {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         Log.i(TAG, "onDraw: ......");
+        canvas.drawBitmap(bitmap, 0, 0, null);
+    }
 
-        canvas.drawBitmap(bitmap, 0, 0, new Paint());
+    public BezierLoadingView getLoadingView() {
+        return mLoadingView;
     }
 }

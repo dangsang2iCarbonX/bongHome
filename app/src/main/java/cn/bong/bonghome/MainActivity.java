@@ -3,16 +3,16 @@ package cn.bong.bonghome;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import cn.hackill.bong.AttachUtil;
-import cn.hackill.bong.DragTopLayout;
+import cn.hackill.bong.HomeLayout;
 import de.greenrobot.event.EventBus;
 
 
@@ -22,13 +22,12 @@ public class MainActivity extends Activity {
 
     private ListView mList;
     private Button mStop;
-    private DragTopLayout dropTopLayout;
+    private HomeLayout dropTopLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
 
 
         dropTopLayout = findViewById(R.id.refresh_layout);
@@ -92,7 +91,7 @@ public class MainActivity extends Activity {
         mStop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                dropTopLayout.setRefreshing(false);
             }
         });
 
@@ -118,12 +117,17 @@ public class MainActivity extends Activity {
         });
 
 
+        mList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Toast.makeText(getApplicationContext(), "click =" + i, Toast.LENGTH_SHORT).show();
+            }
+        });
+
     }
 
     // Handle scroll event from fragments
     public void onEvent(Boolean b) {
-
-        Log.e(TAG, "onEvent: ...."  + b);
         dropTopLayout.setTouchMode(b);
     }
 

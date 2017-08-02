@@ -1,12 +1,11 @@
 package cn.bong.bonghome;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
 
-import cn.hackill.bong.Content;
+import cn.hackill.bong.CycContent;
 import cn.hackill.bong.CycProgressBar;
 
 
@@ -54,7 +53,7 @@ public class TestActivity extends Activity {
             @Override
             public void onClick(View v) {
 
-                Content content = new Content();
+                CycContent content = new CycContent();
 
                 content.addition = "233";
                 content.additionUnit = "大卡";
@@ -70,7 +69,7 @@ public class TestActivity extends Activity {
         findViewById(R.id.simple).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Content content = new Content();
+                CycContent content = new CycContent();
 
                 content.value = "23120";
                 content.unit = "步";

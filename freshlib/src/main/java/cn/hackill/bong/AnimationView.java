@@ -13,7 +13,7 @@ import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 
-
+@Deprecated
 public class AnimationView extends View {
 
     private static final String TAG = "AnimationView";
@@ -342,6 +342,9 @@ public class AnimationView extends View {
 
         canvas.drawArc(new RectF(mWidth / 2 - outerR, innerY - outerR, mWidth / 2 + outerR, innerY + outerR),
                 mRefreshStart, swipe, false, mOutPaint);
+
+
+
         if (swipe >= TARGET_DEGREE) {
             mIsStart = false;
         } else if (swipe <= 10) {

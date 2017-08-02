@@ -4,7 +4,6 @@ package cn.hackill.bong;
 
 import android.content.Context;
 import android.os.Handler;
-import android.os.Parcelable;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.ViewDragHelper;
@@ -15,30 +14,22 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
-/**
- * Created by chenupt@gmail.com on 2015/1/18.
- * Description : Drag down to show a menu panel on the top.
- */
-public class DragTopLayout extends FrameLayout {
+public class HomeLayout extends FrameLayout {
 
-    private static final String TAG = "DragTopLayout";
+    private static final String TAG = "HomeLayout";
 
     private ViewDragHelper dragHelper;
     private int dragRange;
     private View dragContentView;
-    private View topView;
+    private TopLayout topView;
 
     private int contentTop; //内容顶部
     private int topViewHeight;
     private float ratio;
-    private boolean isRefreshing;
     private boolean shouldIntercept = true;
 
     private PanelListener panelListener;
-    private float refreshRatio = 1.5f;
-    private boolean overDrag = false;
-    private int collapseOffset; // 不能折叠的
-    private boolean captureTop = true;
+    private int collapseOffset = 0; // 不能折叠的
 
     // Used for scrolling
     private boolean dispatchingChildrenDownFaked = false;
@@ -46,7 +37,6 @@ public class DragTopLayout extends FrameLayout {
     private float dispatchingChildrenStartedAtY = Float.MAX_VALUE;
 
     private PanelState panelState = PanelState.EXPANDED;
-
 
     public enum PanelState {
 
@@ -60,39 +50,23 @@ public class DragTopLayout extends FrameLayout {
             this.asInt = i;
         }
 
-        static PanelState fromInt(int i) {
-            switch (i) {
-                case 0:
-                    return COLLAPSED;
-                case 2:
-                    return SLIDING;
-                default:
-                case 1:
-                    return EXPANDED;
-            }
-        }
-
-
-        public int toInt() {
-            return asInt;
-        }
     }
 
 
-    public DragTopLayout(Context context) {
+    public HomeLayout(Context context) {
         this(context, null);
     }
 
-    public DragTopLayout(Context context, AttributeSet attrs) {
+    public HomeLayout(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public DragTopLayout(Context context, AttributeSet attrs, int defStyleAttr) {
+    public HomeLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init(attrs);
+        init();
     }
 
-    private void init(AttributeSet attrs) {
+    private void init() {
         dragHelper = ViewDragHelper.create(this, 1.0f, callback);
         // 不能折叠的距离 default = 0
         setCollapseOffset(0);
@@ -116,7 +90,7 @@ public class DragTopLayout extends FrameLayout {
             throw new RuntimeException("Content view must contains two child views at least.");
         }
 
-        topView = getChildAt(0);
+        topView = (TopLayout) getChildAt(0);
         dragContentView = getChildAt(1);
     }
 
@@ -131,7 +105,7 @@ public class DragTopLayout extends FrameLayout {
         measureTopViewHeight();
         measureContentHeight();
 
-//        Log.i(TAG, "onLayout: contentTop = " + contentTop +", dragRange " + dragRange +",dragContentView.getHeight() = "+ dragContentView.getHeight());
+        Log.d(TAG, "onLayout: contentTop = " + contentTop + ", dragRange " + dragRange + ",dragContentView.getHeight() = " + dragContentView.getHeight());
 
         topView.layout(left, Math.min(topView.getPaddingTop(), contentTop - topViewHeight), right,
                 contentTop);
@@ -195,11 +169,8 @@ public class DragTopLayout extends FrameLayout {
         if (panelListener != null) {
             // Calculate the ratio while dragging.
             panelListener.onSliding(ratio);
-            if (ratio > refreshRatio && !isRefreshing) {
-                isRefreshing = true;
-                panelListener.onRefresh();
-            }
         }
+//        Log.i(TAG, "calculateRatio: ...ratio = " + ratio);
     }
 
     private void updatePanelState() {
@@ -216,45 +187,19 @@ public class DragTopLayout extends FrameLayout {
         }
     }
 
-    @Override
-    protected Parcelable onSaveInstanceState() {
-
-        Parcelable superState = super.onSaveInstanceState();
-        SavedState state = new SavedState(superState);
-        state.panelState = panelState.toInt();
-
-        return state;
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Parcelable state) {
-
-        if (!(state instanceof SavedState)) {
-            super.onRestoreInstanceState(BaseSavedState.EMPTY_STATE);
-            return;
-        }
-
-        SavedState s = (SavedState) state;
-        super.onRestoreInstanceState(s.getSuperState());
-
-        this.panelState = PanelState.fromInt(s.panelState);
-        if (panelState == PanelState.COLLAPSED) {
-            closeTopView(false);
-        } else {
-            openTopView(false);
-        }
-    }
+    private boolean needInter = false;
 
     private ViewDragHelper.Callback callback = new ViewDragHelper.Callback() {
         @Override
         public boolean tryCaptureView(View child, int pointerId) {
-            Log.i(TAG, "tryCaptureView: ");
 
-            if (child == topView && captureTop) {
+            Log.i(TAG, "tryCaptureView: child = " + child + ",pointerId = " + pointerId);
+
+            if (child == topView) {
                 dragHelper.captureChildView(dragContentView, pointerId);
                 return false;
             }
-            return child == dragContentView;
+            return child == dragContentView && shouldIntercept;
         }
 
         @Override
@@ -275,48 +220,58 @@ public class DragTopLayout extends FrameLayout {
         @Override
         public int clampViewPositionVertical(View child, int top, int dy) {
 
-            float value = Math.min(topViewHeight, Math.max(top, getPaddingTop() + collapseOffset));
+            Log.i(TAG, "clampViewPositionVertical: top = " + top);
 
-            Log.i(TAG, "clampViewPositionVertical: value = " + value + ", top = " + top + ", dy = " + dy);
+            if (top < 0 && contentTop > 0) {
+                needInter = true;
+            } else {
+                needInter = false;
+            }
 
-            return Math.min(topViewHeight * 2, Math.max(top, getPaddingTop() + collapseOffset));
-
-//            if (overDrag) {
-//                // Drag over the top view height.
-//                return Math.max(top, getPaddingTop() + collapseOffset);
-//            } else {
+            boolean isRefreshing = topView.getLoadingView().isRefresh();
+//            if (isRefreshing) {
 //                return Math.min(topViewHeight, Math.max(top, getPaddingTop() + collapseOffset));
 //            }
+
+            return (int) Math.min(1.22f * topViewHeight, Math.max(top, getPaddingTop() + collapseOffset));
         }
 
         @Override
         public void onViewReleased(View releasedChild, float xvel, float yvel) {
             super.onViewReleased(releasedChild, xvel, yvel);
-            Log.d(TAG, "onViewReleased() called with: releasedChild = [" + releasedChild + "], xvel = [" + xvel + "], yvel = [" + yvel + "]");
+            Log.d(TAG, "onViewReleased() called with: releasedChild = [" + releasedChild.getId() + "], xvel = [" + xvel + "], yvel = [" + yvel + "]" + ", contentTop = " + contentTop);
             // yvel > 0 Fling down || yvel < 0 Fling up
             int top;
-            if (yvel > 0 || contentTop > topViewHeight) {
+            if (yvel > 0 || contentTop > topViewHeight / 2) {
                 top = topViewHeight + getPaddingTop();
             } else {
                 top = getPaddingTop() + collapseOffset;
             }
             dragHelper.settleCapturedViewAt(releasedChild.getLeft(), top);
+            topView.getLoadingView().releaseFinger();
             postInvalidate();
         }
 
         @Override
         public void onViewDragStateChanged(int state) {
-            Log.i(TAG, "onViewDragStateChanged: ");
+            Log.i(TAG, "onViewDragStateChanged: state = " + state);
             super.onViewDragStateChanged(state);
         }
     };
 
     @Override
     public void computeScroll() {
-//        Log.i(TAG, "computeScroll: ");
         if (dragHelper.continueSettling(true)) {
             ViewCompat.postInvalidateOnAnimation(this);
         }
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+
+//        Log.i(TAG, "dispatchTouchEvent:  dragHelper.shouldInterceptTouchEvent(ev) = " +  dragHelper.shouldInterceptTouchEvent(ev));
+
+        return super.dispatchTouchEvent(ev);
     }
 
     @Override
@@ -324,7 +279,8 @@ public class DragTopLayout extends FrameLayout {
         try {
 
             boolean intercept = shouldIntercept && dragHelper.shouldInterceptTouchEvent(ev);
-            return intercept;
+            Log.i(TAG, "onInterceptTouchEvent:   intercept = " + intercept + ", shouldIntercept = " + shouldIntercept + ", needInter = " + needInter);
+            return intercept || needInter;
         } catch (NullPointerException e) {
             e.printStackTrace();
         }
@@ -336,35 +292,37 @@ public class DragTopLayout extends FrameLayout {
 
         final int action = MotionEventCompat.getActionMasked(event);
 
+        Log.i(TAG, "onTouchEvent: dispatchingChildrenContentView = " + dispatchingChildrenContentView);
         if (!dispatchingChildrenContentView) {
             try {
                 // There seems to be a bug on certain devices: "pointerindex out of range" in viewdraghelper
                 // https://github.com/umano/AndroidSlidingUpPanel/issues/351
-                dragHelper.processTouchEvent(event);
+                dragHelper.processTouchEvent(event); //EXPAND的时候才执行，否则是contentView自己的滑动事件？
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-
+        // ratio == 0, when top = 0, COLLAPSED
+        // test：以下是处理特殊情况的code，COLLAPSED时先向上在快速向下滑动能保证回到首条后topview能Expand
         if (action == MotionEvent.ACTION_MOVE && ratio == 0.0f) {
-            dispatchingChildrenContentView = true;
+            dispatchingChildrenContentView = true;// true 表明contentView自己去处理滑动事件
             if (!dispatchingChildrenDownFaked) {
-                dispatchingChildrenStartedAtY = event.getY();
+                dispatchingChildrenStartedAtY = event.getY();// 记录contentView开始处理滑动的初始坐标
                 event.setAction(MotionEvent.ACTION_DOWN);
                 dispatchingChildrenDownFaked = true;
             }
             dragContentView.dispatchTouchEvent(event);
         }
-
+        // dispatchingChildrenStartedAtY 变量的作用：你接管滑动的初始坐标小于滑动到的坐标时，不再接管，事件交由ViewDragHelper
         if (dispatchingChildrenContentView && dispatchingChildrenStartedAtY < event.getY()) {
             resetDispatchingContentView();
         }
 
         if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_CANCEL) {
-            resetDispatchingContentView();
+            resetDispatchingContentView();// 结束性的事件，恢复
             dragContentView.dispatchTouchEvent(event);
         }
-
+        // true标记touch事件已经被消费掉，不再向下传递
         return true;
     }
 
@@ -427,7 +385,7 @@ public class DragTopLayout extends FrameLayout {
         }
     }
 
-    public DragTopLayout setTouchMode(boolean shouldIntercept) {
+    public HomeLayout setTouchMode(boolean shouldIntercept) {
         this.shouldIntercept = shouldIntercept;
         return this;
     }
@@ -437,54 +395,14 @@ public class DragTopLayout extends FrameLayout {
      *
      * @return SetupWizard
      */
-    public DragTopLayout listener(PanelListener panelListener) {
+    public HomeLayout listener(PanelListener panelListener) {
         this.panelListener = panelListener;
         return this;
     }
 
-    /**
-     * Set the refresh position while dragging you want.
-     * The default value is 1.5f.
-     *
-     * @return SetupWizard
-     */
-    public DragTopLayout setRefreshRatio(float ratio) {
-        this.refreshRatio = ratio;
-        return this;
-    }
-
-    /**
-     * Set enable drag over.
-     * The default value is true.
-     *
-     * @return SetupWizard
-     */
-    public DragTopLayout setOverDrag(boolean overDrag) {
-        this.overDrag = overDrag;
-        return this;
-    }
-
-
-    public boolean isOverDrag() {
-        return overDrag;
-    }
-
-    /**
-     * Get refresh state
-     */
-    public boolean isRefreshing() {
-        return isRefreshing;
-    }
 
     public void setRefreshing(boolean isRefreshing) {
-        this.isRefreshing = isRefreshing;
-    }
-
-    /**
-     * Complete refresh and reset the refresh state.
-     */
-    public void onRefreshComplete() {
-        isRefreshing = false;
+        topView.getLoadingView().setRefresh(isRefreshing);
     }
 
     /**
@@ -492,18 +410,11 @@ public class DragTopLayout extends FrameLayout {
      *
      * @return SetupWizard
      */
-    public DragTopLayout setCollapseOffset(int px) {
+    public HomeLayout setCollapseOffset(int px) {
         collapseOffset = px;
         measureContentHeight();
         return this;
     }
-
-    public int getCollapseOffset() {
-        return collapseOffset;
-    }
-
-
-    // ---------------------
 
     public interface PanelListener {
         /**
@@ -523,16 +434,5 @@ public class DragTopLayout extends FrameLayout {
         void onRefresh();
     }
 
-    /**
-     * Save the instance state
-     */
-    private static class SavedState extends BaseSavedState {
 
-        int panelState;
-
-        SavedState(Parcelable superState) {
-            super(superState);
-        }
-
-    }
 }

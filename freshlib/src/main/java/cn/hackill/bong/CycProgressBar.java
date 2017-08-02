@@ -14,8 +14,6 @@ import android.view.View;
 
 import com.tuesda.walker.circlerefresh.R;
 
-import java.util.Random;
-
 /**
  * @author hackill
  * @date on 17/7/25 17:07
@@ -54,7 +52,7 @@ public class CycProgressBar extends View {
     private Paint mTestPaint;
 
     private Style mStyle = Style.Thumbnail;
-    private Content mContent = new Content();
+    private CycContent mContent = new CycContent();
     private Context mContext;
 
     @Override
@@ -85,7 +83,7 @@ public class CycProgressBar extends View {
         initMeasure(20);
     }
 
-    public void setContent(Content content, Style style) {
+    public void setContent(CycContent content, Style style) {
         this.mContent = content;
         this.mStyle = style;
         invalidate();

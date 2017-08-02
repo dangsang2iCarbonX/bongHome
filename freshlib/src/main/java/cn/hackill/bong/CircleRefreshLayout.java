@@ -21,6 +21,7 @@ import android.widget.LinearLayout;
 import com.tuesda.walker.circlerefresh.R;
 
 
+@Deprecated
 public class CircleRefreshLayout extends LinearLayout {
 
     private static String TAG = "pullToRefresh";
@@ -36,7 +37,7 @@ public class CircleRefreshLayout extends LinearLayout {
     private float mPullHeight;
     private float mHeaderHeight;
     private View mChildView;
-    private SummaryLayout mHeaderAnimationView;
+    private AnimationView mHeaderAnimationView;
 
     private boolean mIsRefreshing;
 
@@ -93,7 +94,7 @@ public class CircleRefreshLayout extends LinearLayout {
     }
 
     private void addHeaderView() {
-        mHeaderAnimationView = new SummaryLayout(getContext());
+        mHeaderAnimationView = new AnimationView(getContext());
         LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 200);
 //        params.gravity = Gravity.TOP;
         mHeaderAnimationView.setLayoutParams(params);
@@ -133,7 +134,7 @@ public class CircleRefreshLayout extends LinearLayout {
         });
         mUpTopAnimator.setDuration(BACK_TOP_DUR);
 
-        mHeaderAnimationView.setOnViewAniDone(new SummaryLayout.OnViewAniDone() {
+        mHeaderAnimationView.setOnViewAniDone(new AnimationView.OnViewAniDone() {
             @Override
             public void viewAniDone() {
                 Log.i(TAG, "viewAniDone: 。。。。");
